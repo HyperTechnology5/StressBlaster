@@ -1,0 +1,24 @@
+body, html{
+  height:100%;
+}
+body{
+  font-family: sans-serif;
+  background-color: transparent;
+  position: relative;
+  //color:#333;
+  //text-align: center;
+  //background-image: url('../img/background.png');
+  //background-repeat:repeat;
+  //background-size: cover;
+}
+
+.image-wrapper {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+}
+
+.image-wrapper.fade-out {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
