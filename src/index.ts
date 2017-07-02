@@ -5,10 +5,98 @@ interface Screen {
 
 module StressBlasterApp {
   "use strict";
+  const FADE_DELAY = 1000;
+  const FADE_DURATION = 1000;
+
+  class fireAnim {
+    
+    div: HTMLElement;
+    snd: any;
+    constructor (pgX : number, pgY : number) {
+      this.div = document.createElement('div'); 
+      this.div.classList.add('image-wrapper');
+      this.div.style.left = pgX + 'px';
+      this.div.style.top = pgY + 'px';
+      this.div.innerHTML = '<img src="img/explode.png" width="120" height="120" />';
+      document.body.appendChild(this.div);
+
+      this.snd = new Audio('snd/explosion.mp3');
+      setTimeout(this.startFade.bind(this), FADE_DELAY);      
+      this.snd.play();
+    }
+    startFade():void {
+      this.div.classList.add('fade-out');
+      setTimeout(this.finishFade.bind(this), FADE_DURATION);
+      this.snd = null;
+    }
+    finishFade():void {
+      this.div.remove();
+    }
+  }
+  class mushAnim {
+    div: HTMLElement;
+    snd: any;
+    counter: number;
+    constructor (pgX : number, pgY : number) {
+      this.div = document.createElement('div'); 
+      this.div.classList.add('image-wrapper');
+      this.div.style.left = pgX + 'px';
+      this.div.style.top = (pgY-60) + 'px';
+      this.counter = 0;
+      document.body.appendChild(this.div);
+      this.snd = new Audio('snd/explosion.mp3');
+      this.snd.play();
+      this.animate();
+    }
+    animate():void {
+      ++this.counter;
+      this.div.innerHTML = '<img src="img/mushroom/img'+this.counter+'.png" width="120" height="120" />';
+      if (this.counter == 25) {
+	setTimeout(this.stop.bind(this), 100);
+      } else {
+	setTimeout(this.animate.bind(this), 100);
+      }
+    }
+    stop():void {
+      this.div.remove();
+      this.snd = null;
+    }
+  }
+  class bloodAnim {
+    div: HTMLElement;
+    snd: any;
+    counter: number;
+    constructor (pgX : number, pgY : number) {
+      this.div = document.createElement('div'); 
+      this.div.classList.add('image-wrapper');
+      this.div.style.left = pgX + 'px';
+      this.div.style.top = pgY + 'px';
+      this.counter = 0;
+      document.body.appendChild(this.div);
+      this.snd = new Audio('snd/headchop.mp3');
+      this.snd.play();
+      this.animate();
+    }
+    animate():void {
+      ++this.counter;
+      this.div.innerHTML = '<img src="img/blood/img'+this.counter+'.png" width="120" height="120" />';
+      if (this.counter == 9) {
+	setTimeout(this.stop.bind(this), 150);
+      } else {
+	setTimeout(this.animate.bind(this), 150);
+      }
+    }
+    stop():void {
+      this.div.remove();
+      this.snd = null;
+    }
+  }
 
   export module Application {
+    var weapon : number;
     export function initialize() {
       document.addEventListener('deviceready', onDeviceReady, false);
+      weapon = 0;
     }
     function stopCamera() {
       CameraPreview.stopCamera();
@@ -22,26 +110,24 @@ module StressBlasterApp {
       CameraPreview.switchCamera();
       e.stopPropagation();
     }
+    function switchWeapon(e : Event){
+      console.log('SWITCHING WEAPON********************');
+      weapon = weapon + 1;
+      if (weapon >= 3) weapon = 0;
+      e.stopPropagation();
+    }
     function shootIt(e : MouseEvent) {
-      var fadeDelay = 1000;
-      var fadeDuration = 1000;
-      
-      var div = document.createElement('div');
-      div.classList.add('image-wrapper');
-      div.style.left = e.pageX + 'px';
-      div.style.top = e.pageY + 'px';
-      div.innerHTML += '<img src="img/explode.png" width="120" height="120" />';
-      document.body.appendChild(div);
-
-      var snd_explosion = new Audio('snd/explosion.mp3');
-
-      setTimeout(function() {
-	      div.classList.add('fade-out');           
-	      setTimeout(function() { div.remove(); }, fadeDuration);
-	      snd_explosion = null;
-      }, fadeDelay);
-      
-      snd_explosion.play();
+      switch (weapon) {
+	case 0:
+	  new fireAnim(e.pageX,e.pageY);
+	  break;
+	case 1:
+	  new mushAnim(e.pageX,e.pageY);
+	  break;
+	case 2:
+	  new bloodAnim(e.pageX,e.pageY);
+	  break;
+      }
     }
 
     function startCamera() {
@@ -58,6 +144,7 @@ module StressBlasterApp {
       document.addEventListener('resume', onResume, false);
       startCamera();
       document.getElementById('switchCameraButton').addEventListener('click', switchCamera.bind(this), false);
+      document.getElementById('switchWeaponButton').addEventListener('click', switchWeapon.bind(this), false);
       document.addEventListener('click', shootIt.bind(this), false);
       window.addEventListener('orientationchange', rotateIt.bind(this), false);
     }
