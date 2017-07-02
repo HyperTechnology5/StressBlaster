@@ -29,16 +29,19 @@ cordova build ios
 
 ## TODO
 
-- BUG: Switching cameras shoots
-- BUG: Only one explosion sound at a time.
 - BUG: Rotating the screen is weird.
-- Need an icon
+- Convert to TypeScript
 - Animated explosions
 - Weapon selector and multiple weapos (Maybe through volume buttons?)
+- Integrate TRAVIS
 
 ## Changes
 
+- 0.1.1: Fixes
+  - BUG: Switching cameras shoots
+  - BUG: Only one explosion sound at a time.
 - 0.1.0: MVP
+
 
 
 [co]: https://cordova.apache.org/
