@@ -7,6 +7,7 @@
     <author email="alejandro_liu@hotmail.com" href="https://github.com/HyperTechnology5">
         Hyper Technology 5 Team
     </author>
+    <hook src="scripts/appBeforeBuild.sh" type="before_run" />
     <hook src="scripts/appBeforeBuild.sh" type="before_build" />
     <icon src="www/img/logo.png" />
     <content src="index.html" />

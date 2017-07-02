@@ -30,13 +30,18 @@ cordova build ios
 ## TODO
 
 - BUG: Rotating the screen is weird.
-- Convert to TypeScript
+
 - Animated explosions
 - Weapon selector and multiple weapos (Maybe through volume buttons?)
 - Integrate TRAVIS
 
 ## Changes
 
+<!-- BEGIN RELEASE NOTES -->
+- 0.1.2:
+  - Converted to TypeScript
+
+<!-- END RELEASE NOTES -->
 - 0.1.1: Fixes
   - BUG: Switching cameras shoots
   - BUG: Only one explosion sound at a time.

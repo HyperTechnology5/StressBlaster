@@ -1,0 +1,63 @@
+language: android
+
+notifications:
+  email: false
+
+sudo: false
+
+jdk:
+  - oraclejdk8
+
+android:
+  components:
+    - tools
+    - platform-tools
+    
+    - build-tools-26.0.0
+    - android-26
+
+    # Additional components
+    #- extra-google-google_play_services
+    #- extra-google-m2repository
+    #- extra-android-m2repository
+    #- addon-google_apis-google-19
+
+    # Specify at least one system image,
+    # if you need to run emulator(s) during your tests
+    #- sys-img-armeabi-v7a-android-22
+    #- sys-img-armeabi-v7a-android-17
+#branches:
+#  only:
+#  - master
+
+install:
+  - . $HOME/.nvm/nvm.sh
+  - nvm install stable
+  - nvm use stable
+  - npm version
+  - npm install -g cordova
+  - npm install -g typescript
+  - echo y  | android update sdk -u -a -t android-25
+  #- echo y | android update sdk -u --filter android-22,android-23
+
+before_script:
+  - cordova platform rm android
+  - cordova platform add android
+
+script:
+  - bash prep.sh validate
+  - cordova prepare
+  - cordova build android --release -- --keystore=my.keystore --storePassword="$STORE_SECRET" --password="$KEY_SECRET" --alias=ht5
+  - bash prep.sh package
+  
+deploy:
+  provider: releases
+  api_key:
+    secure: uXJe6NSG17iCzwjDy403iKaNENPvr6WhgI7kH87wJdG1mLDU9i8mTaNT89t6hDn0DSBocZA2F/GVtOD/ba4BY9l28mTUoQX3ftbNw53sHvUQt7NJ5zSOYF41UgYrhn8WcMnVxBz1BULCccT8l5NYgO6bMEfzNxu1FQndJZ7YzesJUgrA4gEUMwR70FaREFF/prMPHikBq2Mc9CgnZtt57zpa4V/wKOyWoY94mOcUyuOyhFUnxs2sLw/Jrfrmir3XwyMI4LWPZwaag4s7vCf5anQTX3SWM4uhMkoHO8iNV6d/G67GDz2IeqTNWJfYSJ+dzYfCS8GVdpzW7GCVm3kWcdFyRQYBw6YZKMrno9C2axk97Kv6rCFz5Zu9Evf1Q/nPx/DQ7zbPPtiY9DeE9B9J+YzKhb7C7WiT2/gXRdVoyvHtMfWKgWNCaVjk2QyU17ssIcvyypFJleRNAwqAVzXOsfqlO+HMF2tDiglXGPV8ktBCUu7AcaxrgZXNHEIRlHhJj1QpUrMonFmm0onxvE/L0aoJKY0AbT3fpTZvofYcmWELdtd+XTfFqTwNfZjMfbXqelk9czQCrsxOXbg95roQ+Xmz14pGfFQ0mkIhzBlGrEtM9TEI9vx5g/9QWFt6rz3o8iExYrV745QuP9+nWBQlRLj+KfCqycPO+iMgTBGNSL8=
+  skip_cleanup: true
+  file:
+    - StressBlaster.apk
+    - RELEASE_NOTES.md
+  on:
+    repo: HyperTechnology5/StressBlaster
+    tags: true
