@@ -1,4 +1,4 @@
-# Basic Privacy Policy
+# StressBlaster Privacy Policy
 
 ## Privacy Policy
 

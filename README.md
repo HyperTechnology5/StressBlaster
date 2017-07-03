@@ -33,13 +33,11 @@ cordova build ios
 
 ## Changes
 
-- 0.2.0:
 <!-- BEGIN RELEASE NOTES -->
+- 0.2.0:
   - UI tweaks
   - Added Gun shot effect
-
 <!-- END RELEASE NOTES -->
-
 - 0.1.3:
   - Animated explosions
   - Weapon selector and multiple weapons
@@ -49,7 +47,7 @@ cordova build ios
 - 0.1.1: Fixes
   - BUG: Switching cameras shoots
   - BUG: Only one explosion sound at a time.
-- BUG: Rotating the screen is weird.
+  - BUG: Rotating the screen is weird.
 - 0.1.0: MVP
 
 
