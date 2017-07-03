@@ -5,11 +5,8 @@ interface Screen {
 
 module StressBlasterApp {
   "use strict";
-  const FADE_DELAY = 1000;
-  const FADE_DURATION = 1000;
 
   class fireAnim {
-    
     div: HTMLElement;
     snd: any;
     constructor (pgX : number, pgY : number) {
@@ -21,12 +18,36 @@ module StressBlasterApp {
       document.body.appendChild(this.div);
 
       this.snd = new Audio('snd/explosion.mp3');
-      setTimeout(this.startFade.bind(this), FADE_DELAY);      
+      setTimeout(this.startFade.bind(this), 1000);
       this.snd.play();
     }
     startFade():void {
       this.div.classList.add('fade-out');
-      setTimeout(this.finishFade.bind(this), FADE_DURATION);
+      setTimeout(this.finishFade.bind(this), 1000);
+      this.snd = null;
+    }
+    finishFade():void {
+      this.div.remove();
+    }
+  }
+  class shotAnim {
+    div: HTMLElement;
+    snd: any;
+    constructor (pgX : number, pgY : number) {
+      this.div = document.createElement('div'); 
+      this.div.classList.add('image-wrapper');
+      this.div.style.left = pgX + 'px';
+      this.div.style.top = pgY + 'px';
+      this.div.innerHTML = '<img src="img/bullet-hole.png" width="120" height="120" />';
+      document.body.appendChild(this.div);
+
+      this.snd = new Audio('snd/gunshot.mp3');
+      setTimeout(this.startFade.bind(this), 1000);
+      this.snd.play();
+    }
+    startFade():void {
+      this.div.classList.add('fade-out');
+      setTimeout(this.finishFade.bind(this), 1000);
       this.snd = null;
     }
     finishFade():void {
@@ -44,7 +65,7 @@ module StressBlasterApp {
       this.div.style.top = (pgY-60) + 'px';
       this.counter = 0;
       document.body.appendChild(this.div);
-      this.snd = new Audio('snd/explosion.mp3');
+      this.snd = new Audio('snd/blast.mp3');
       this.snd.play();
       this.animate();
     }
@@ -66,6 +87,7 @@ module StressBlasterApp {
     div: HTMLElement;
     snd: any;
     counter: number;
+    
     constructor (pgX : number, pgY : number) {
       this.div = document.createElement('div'); 
       this.div.classList.add('image-wrapper');
@@ -91,9 +113,19 @@ module StressBlasterApp {
       this.snd = null;
     }
   }
+  
+  const ICO = 0;
+  const FACTORY = 1;
 
   export module Application {
     var weapon : number;
+    var arsenal = [
+      [ "explode-ico.png", function(x,y) { return new fireAnim(x,y); } ],
+      [ "mushroom-ico.png", function(x,y) { return new mushAnim(x,y); } ],
+      [ "blood-ico.png", function(x,y) { return new bloodAnim(x,y); } ],
+      [ "gun-ico.png", function(x,y) { return new shotAnim(x,y); } ],
+      [ null, null ]
+    ];
     export function initialize() {
       document.addEventListener('deviceready', onDeviceReady, false);
       weapon = 0;
@@ -109,25 +141,24 @@ module StressBlasterApp {
       console.log('SWITCHING CAMERAS********************');
       CameraPreview.switchCamera();
       e.stopPropagation();
+      var snd = new Audio('snd/sw_camera.mp3');
+      snd.play();
+      setTimeout(function() { snd = null; },1000);
     }
     function switchWeapon(e : Event){
       console.log('SWITCHING WEAPON********************');
       weapon = weapon + 1;
-      if (weapon >= 3) weapon = 0;
+      if (arsenal[weapon][ICO] == null) weapon = 0;
+      var button : any = document.getElementById('switchWeaponButton');
+      button.src = "img/" + arsenal[weapon][ICO];
       e.stopPropagation();
+      var snd = new Audio('snd/sw_tool.mp3');
+      snd.play();
+      setTimeout(function() { snd = null; },1000);
     }
     function shootIt(e : MouseEvent) {
-      switch (weapon) {
-	case 0:
-	  new fireAnim(e.pageX,e.pageY);
-	  break;
-	case 1:
-	  new mushAnim(e.pageX,e.pageY);
-	  break;
-	case 2:
-	  new bloodAnim(e.pageX,e.pageY);
-	  break;
-      }
+      var factory : any = arsenal[weapon][FACTORY];
+      factory(e.pageX,e.pageY);
     }
 
     function startCamera() {

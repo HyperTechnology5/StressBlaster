@@ -33,11 +33,16 @@ cordova build ios
 
 ## Changes
 
-- 0.1.3:
+- 0.2.0:
 <!-- BEGIN RELEASE NOTES -->
+  - UI tweaks
+  - Added Gun shot effect
+
+<!-- END RELEASE NOTES -->
+
+- 0.1.3:
   - Animated explosions
   - Weapon selector and multiple weapons
-<!-- END RELEASE NOTES -->
 - 0.1.2:
   - Integrate TRAVIS
   - Converted to TypeScript
